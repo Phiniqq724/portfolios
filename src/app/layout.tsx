@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     siteName: "Fahrell Sandy Portfolio",
     images: [
       {
-        url: "/og-image.png", // TODO: Add an og-image.png to your public folder
+        url: "/favicon.ico", // TODO: Add an og-image.png to your public folder
         width: 1200,
         height: 630,
         alt: "Fahrell Sandy Portfolio",
