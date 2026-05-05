@@ -25,8 +25,60 @@ const workSans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "SANDY.",
-  description: "Archive.",
+  metadataBase: new URL("https://www.mustpikek.dev"),
+  title: {
+    default: "Fahrell Sandy | Portfolio",
+    template: "%s | Fahrell Sandy",
+  },
+  description:
+    "Portfolio and archive of Fahrell Sandy, showcasing projects, skills, and experience.",
+  keywords: [
+    "Fahrell Sandy",
+    "Portfolio",
+    "Software Engineer",
+    "Frontend Developer",
+    "Fullstack Developer",
+    "Next.js",
+    "React",
+    "Web Development",
+  ],
+  authors: [{ name: "Fahrell Sandy" }],
+  creator: "Fahrell Sandy",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://www.mustpikek.dev",
+    title: "Fahrell Sandy | Portfolio",
+    description:
+      "Portfolio and archive of Fahrell Sandy, showcasing projects, skills, and experience.",
+    siteName: "Fahrell Sandy Portfolio",
+    images: [
+      {
+        url: "/og-image.png", // TODO: Add an og-image.png to your public folder
+        width: 1200,
+        height: 630,
+        alt: "Fahrell Sandy Portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fahrell Sandy | Portfolio",
+    description:
+      "Portfolio and archive of Fahrell Sandy, showcasing projects, skills, and experience.",
+    images: ["/og-image.png"], // TODO: Add an og-image.png to your public folder
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
