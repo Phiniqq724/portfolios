@@ -156,6 +156,7 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
                 src={cursorMode.src}
                 alt={cursorMode.alt ?? ""}
                 fill
+                unoptimized
                 className="object-cover"
               />
             )}
