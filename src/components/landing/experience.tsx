@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import ScrollReveal from "../utils/scrollReveal";
+import { useCursor } from "../cursorContext";
 
 const experiences = [
   {
@@ -10,6 +13,7 @@ const experiences = [
     description:
       "Studied programming fundamentals, data structures, and algorithms. Led the front-end division of METIC tech community and collaborated with Telkom Indico to deliver a full IoT ecosystem for chicken farm monitoring using Raspberry Pi and ESP32.",
     link: "https://smktelkom-mlg.sch.id/",
+    label: "My beloved School ❤️",
   },
   {
     role: "MENDIX INTERN",
@@ -18,6 +22,7 @@ const experiences = [
     description:
       "Assisted in developing and maintaining low-code applications using the Mendix platform. Collaborated with the engineering team to deliver internal tools and business process solutions.",
     link: "https://www.merkleinnovation.com/",
+    label: "I was an Intern here! 😺",
   },
   {
     role: "WEBSITE DEVELOPER",
@@ -26,10 +31,12 @@ const experiences = [
     description:
       "Developing and maintaining the company website, implementing UI/UX designs, and ensuring consistent performance across devices.",
     link: "https://www.wahanaartha.com/",
+    label: "Where I work now 😎",
   },
 ];
 
 export default function ExperienceSection() {
+  const { setCursorMode } = useCursor();
   return (
     <ScrollReveal>
       <section
@@ -54,7 +61,15 @@ export default function ExperienceSection() {
                 className="relative space-y-2 animate-item group animate-on-center"
               >
                 <div className="absolute -left-[2.65rem] top-1 w-3 h-3 translate-y-1.5 rounded-full bg-bg-primary border-2 group-hover:border-primary group-[.is-active]:border-primary transition-colors duration-300 border-primary/30" />
-                <Link href={exp.link} target="_blank" className="cursor-none">
+                <Link
+                  href={exp.link}
+                  target="_blank"
+                  className="cursor-none"
+                  onMouseEnter={() =>
+                    setCursorMode({ type: "label", text: exp.label })
+                  }
+                  onMouseLeave={() => setCursorMode({ type: "default" })}
+                >
                   <div className="flex lg:flex-row flex-col justify-between lg:items-end items-start">
                     <h1 className="text-xl font-sans relative">
                       <span className="text-[#A1A1AA]">{exp.role}</span>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { handleScrollTo } from "../navbar";
 import React from "react";
 import ScrollReveal from "../utils/scrollReveal";
+import { useCursor } from "../cursorContext";
 
 const marqueeDev = [
   { name: "WEB ENTHUSIAST", role: "Fullstack Developer" },
@@ -14,6 +15,7 @@ const marqueeDev = [
 ];
 
 export default function HeroSection() {
+  const { setCursorMode } = useCursor();
   return (
     <ScrollReveal>
       <section
@@ -29,6 +31,10 @@ export default function HeroSection() {
               href="#projects"
               onClick={(e) => handleScrollTo(e, "#projects")}
               className="text-sm text-primary/50 rotate-90 group"
+              onMouseEnter={() =>
+                setCursorMode({ type: "label", text: "Go Down!" })
+              }
+              onMouseLeave={() => setCursorMode({ type: "default" })}
             >
               SCROLL{" "}
               <ArrowRight

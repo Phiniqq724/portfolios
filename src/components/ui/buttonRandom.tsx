@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import React from "react";
-import { handleScrollTo } from "../navbar";
-import { useRouter } from "next/navigation";
 import { useLoading } from "../utils/loadingWrapper";
+import { useCursor } from "../cursorContext";
 
 export default function ButtonRandom() {
-  const router = useRouter();
+  const { setCursorMode } = useCursor();
   const { startTransition } = useLoading();
   return (
     <Link
@@ -17,6 +16,10 @@ export default function ButtonRandom() {
         e.preventDefault();
         startTransition("/projects");
       }}
+      onMouseEnter={() =>
+        setCursorMode({ type: "label", text: "Explore Archives!" })
+      }
+      onMouseLeave={() => setCursorMode({ type: "default" })}
     >
       SEE OTHERS
     </Link>

@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import ScrollReveal from "../utils/scrollReveal";
+import { useCursor } from "../cursorContext";
 
 export default function CTASection() {
+  const { setCursorMode } = useCursor();
   return (
     <>
       <div className="px-6 flex items-center gap-2">
@@ -27,7 +31,11 @@ export default function CTASection() {
             <div className="group hover: animate-item">
               <Link
                 href="mailto:hey@mustpikek.dev"
-                className="group-hover:text-primary/50 duration-300 cursor-none"
+                className="group-hover:text-primary/50 duration-300"
+                onMouseEnter={() =>
+                  setCursorMode({ type: "label", text: "Say Hi! 👋" })
+                }
+                onMouseLeave={() => setCursorMode({ type: "default" })}
               >
                 WITH SMALL TALK
               </Link>

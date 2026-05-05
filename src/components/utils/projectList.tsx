@@ -6,7 +6,8 @@ import { Project } from "@/utils/supabase";
 import { usePathname } from "next/navigation";
 import { Sort } from "iconsax-reactjs";
 import { useLoading } from "./loadingWrapper";
-const filters = ["ALL", "PROJECT", "CERT", "WEB", "MOBILE", "OTHER"];
+import { useCursor } from "../cursorContext";
+const filters = ["ALL", "PROJECT", "WEB", "MOBILE"];
 const ITEMS_PER_PAGE = 3;
 
 const categoryMap: Record<string, string> = {
@@ -32,7 +33,6 @@ const categoryMap: Record<string, string> = {
   DJANGO: "BACKEND",
   FASTAPI: "BACKEND",
   GOLANG: "BACKEND",
-  CERTIFICATE: "CERT",
 };
 
 export default function ProjectList({ projects }: { projects: Project[] }) {
@@ -40,13 +40,14 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
   const [active, setActive] = useState("ALL");
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const { startTransition } = useLoading();
+  const { setCursorMode } = useCursor();
   const getCategories = (techStack: string[]): string[] => {
     const categories = new Set<string>();
     for (const tech of techStack) {
       const category = categoryMap[tech.toUpperCase()];
       if (category) categories.add(category);
     }
-    return categories.size > 0 ? Array.from(categories) : ["OTHER"];
+    return categories.size > 0 ? Array.from(categories) : ["PROJECT"];
   };
   const sortLabels: Record<string, string> = {
     RECENCY: "SORTED BY RECENCY",
@@ -89,6 +90,13 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                 setSortOrder(next);
                 setDisplayCount(ITEMS_PER_PAGE);
               }}
+              onMouseEnter={() =>
+                setCursorMode({
+                  type: "label",
+                  text: `Sort by ${sortCycle[(sortCycle.indexOf(sortOrder) + 1) % sortCycle.length]}`,
+                })
+              }
+              onMouseLeave={() => setCursorMode({ type: "default" })}
               className="px-4 py-2 border border-primary/20 text-secondary-foreground bg-background font-mono text-xs"
             >
               {sortLabels[sortOrder]}{" "}
@@ -105,14 +113,18 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
             </p>
           </div>
         )}
-        <ul className="flex gap-4 flex-wrap animate-item">
+        <div className="flex gap-4 flex-wrap animate-item">
           {filters.map((filter) => (
-            <li
+            <button
               key={filter}
               onClick={() => {
                 setActive(filter);
                 setDisplayCount(ITEMS_PER_PAGE);
               }}
+              onMouseEnter={() =>
+                setCursorMode({ type: "label", text: filter })
+              }
+              onMouseLeave={() => setCursorMode({ type: "default" })}
               className={`px-4 border font-mono text-sm  transition-colors duration-200 ${
                 active === filter
                   ? "border-primary text-primary"
@@ -120,9 +132,9 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
               }`}
             >
               {filter}
-            </li>
+            </button>
           ))}
-        </ul>
+        </div>
       </div>
 
       <div
@@ -136,6 +148,10 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
               e.preventDefault();
               startTransition(`/projects/${project.id}`);
             }}
+            onMouseEnter={() =>
+              setCursorMode({ type: "label", text: `Open up ${project.name}` })
+            }
+            onMouseLeave={() => setCursorMode({ type: "default" })}
             className="space-y-6 md:max-w-90 max-w-full cursor-none animate-item"
           >
             <div className="space-y-6 md:max-w-90 max-w-full group">
@@ -149,7 +165,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                   className="object-cover w-full h-full transition-all duration-300 group-hover:blur-sm group-hover:scale-105"
                 />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <h1 className="px-4 py-2  text-primary/60 font-mono text-xs tracking-widest border-2 border-primary/40">
+                  <h1 className="px-4 py-2  text-primary/60 font-mono text-xs tracking-widest border-2 border-primary/40 dark:text-secondary/40 dark:border-secondary/40">
                     VIEW PROJECT
                   </h1>
                 </div>
@@ -158,7 +174,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
               <div className="flex justify-between items-start gap-6">
                 <div>
                   <div className="space-y-1">
-                    <h1 className="text-xl font-sans transition-colors duration-300 group-hover:text-[#A1A1AA]">
+                    <h1 className="text-xl font-sans transition-all duration-300 group-hover:font-medium font-normal group-hover:text-secondary-foreground">
                       {project.name}
                     </h1>
                     <p className="text-sm font-mono text-[#71717A]">
@@ -197,6 +213,10 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
         <div className="w-full flex justify-center">
           <button
             onClick={handleLoadMore}
+            onMouseEnter={() =>
+              setCursorMode({ type: "label", text: "Load More!" })
+            }
+            onMouseLeave={() => setCursorMode({ type: "default" })}
             className="px-4 py-2 border border-primary/20 text-[#71717A] bg-background font-mono text-xs hover:border-primary hover:text-primary transition-colors duration-200"
           >
             LOAD MORE

@@ -11,10 +11,12 @@ export default async function ProjectSection() {
     .select("*")
     .order("year", { ascending: false });
 
-  const projects: Project[] = (data ?? []).map((p) => ({
-    ...p,
-    techStack: p.tech_stack,
-  }));
+  const projects: Project[] = (data ?? [])
+    .filter((p) => !p.tech_stack?.includes("CERTIFICATE"))
+    .map((p) => ({
+      ...p,
+      techStack: p.tech_stack,
+    }));
 
   return (
     <ScrollReveal>

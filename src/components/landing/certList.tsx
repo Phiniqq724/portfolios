@@ -29,7 +29,7 @@ export default function CertList({ data }: { data: any[] }) {
               <h1 className="text-xl font-mono font-medium uppercase">
                 {project.role}
               </h1>
-              <h1 className="text-lg font-normal font-sans">
+              <h1 className="text-lg font-normal text-secondary-foreground uppercase font-sans">
                 {project.partner}
               </h1>
             </div>

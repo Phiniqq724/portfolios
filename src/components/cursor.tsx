@@ -12,12 +12,9 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
   const [cursorMode, setCursorMode] = useState<CursorMode>({ type: "default" });
   const [isHovering, setIsHovering] = useState(false);
 
-  // refs untuk direct DOM manipulation — no re-render
   const arrowWrapperRef = useRef<HTMLDivElement>(null);
   const imageTagRef = useRef<HTMLDivElement>(null);
-  const nameTagRef = useRef<HTMLDivElement>(null);
 
-  const CURSOR_NAME = "User";
   const DOT_SMOOTHNESS = 0.15;
 
   useEffect(() => {
@@ -77,6 +74,7 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
   }, [isClient]);
 
   const isImageMode = cursorMode.type === "image";
+  const isLabelMode = cursorMode.type === "label";
 
   if (!isClient) return null;
 
@@ -100,35 +98,38 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
           >
             <path
               d="M4 2L16 10.5L10.5 11.5L8 17L4 2Z"
-              fill="white"
-              stroke="black"
+              fill={
+                isHovering || isImageMode
+                  ? "var(--color-primary)"
+                  : "var(--color-secondary)"
+              }
+              stroke={"var(--color-primary)"}
               strokeWidth="1.2"
               strokeLinejoin="round"
+              style={{ transition: "fill 0.3s ease, stroke 0.3s ease" }}
             />
           </svg>
 
-          {/* Name tag */}
           <div
-            ref={nameTagRef}
             style={{
               position: "absolute",
               top: "12px",
               left: "14px",
-              fontSize: "11px",
+              fontSize: "16px",
               fontWeight: 500,
               padding: "2px 7px",
               borderRadius: "0px 6px 6px 6px",
               whiteSpace: "nowrap",
               lineHeight: "1.6",
               transformOrigin: "top left",
-              transform: isImageMode ? "scale(0.8)" : "scale(1)",
-              opacity: isImageMode ? 0 : 1,
+              transform: isLabelMode ? "scale(0.8)" : "scale(1)",
+              opacity: isLabelMode ? 1 : 0,
               transition:
                 "opacity 0.25s ease, transform 0.25s ease, background-color 0.3s, color 0.3s",
             }}
-            className={`font-mono ${isHovering || isImageMode ? "bg-secondary text-primary" : "bg-primary text-secondary"}`}
+            className={`font-mono ${isHovering || isImageMode ? "bg-primary text-secondary" : "bg-secondary text-primary"}`}
           >
-            {CURSOR_NAME}
+            {cursorMode.type === "label" && cursorMode.text}
           </div>
 
           {/* Image tag */}
@@ -139,16 +140,16 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
               top: "12px",
               left: "14px",
               width: "300px",
-              height: "260px",
+              height: "238px",
               overflow: "hidden",
-              borderRadius: "24px",
+              borderRadius: "0px 24px 24px 24px",
               transformOrigin: "top left",
               transform: isImageMode ? "scale(1)" : "scale(0)",
               opacity: isImageMode ? 1 : 0,
               transition:
                 "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease",
             }}
-            className="border-4 border-primary"
+            className="border-2 border-primary"
           >
             {cursorMode.type === "image" && (
               <Image

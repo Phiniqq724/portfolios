@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ThemeToggle } from "./theme-toggle";
 import { useLoading } from "./utils/loadingWrapper";
+import { useCursor } from "./cursorContext";
 
 interface NavLink {
   label: string;
@@ -90,6 +91,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const { setCursorMode } = useCursor();
+
   return (
     <div className="sticky top-0 z-40 flex justify-center">
       <nav
@@ -108,6 +111,10 @@ export default function Navbar() {
           className={`font-medium font-sans transition-all duration-300 cursor-none ${
             scrolled ? "text-base" : "text-lg"
           }`}
+          onMouseEnter={() =>
+            setCursorMode({ type: "label", text: "It's my name, obviously!" })
+          }
+          onMouseLeave={() => setCursorMode({ type: "default" })}
         >
           SANDY.
         </Link>
@@ -126,6 +133,13 @@ export default function Navbar() {
                     scrolled ? "text-sm" : "text-base"
                   } ${isActive ? "active" : ""}`}
                   onClick={(e) => handleScrollTo(e, href)}
+                  onMouseEnter={() =>
+                    setCursorMode({
+                      type: "label",
+                      text: `Jump to ${label.toLowerCase()}`,
+                    })
+                  }
+                  onMouseLeave={() => setCursorMode({ type: "default" })}
                 >
                   {label}
                   <span

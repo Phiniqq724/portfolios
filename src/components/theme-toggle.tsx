@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { useLoading } from "@/components/utils/loadingWrapper";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "iconsax-reactjs";
+import { useCursor } from "./cursorContext";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -13,10 +14,10 @@ export function ThemeToggle() {
 
   const isDark = theme === "dark";
 
-  // Kalau dark: tampil moon, hover jadi sun
-  // Kalau light: tampil sun, hover jadi moon
   const showMoon = isDark ? !hovered : hovered;
   const showSun = !showMoon;
+
+  const { setCursorMode } = useCursor();
 
   return (
     <Button
@@ -27,8 +28,17 @@ export function ThemeToggle() {
           setTheme(isDark ? "light" : "dark");
         });
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => {
+        setHovered(true);
+        setCursorMode({
+          type: "label",
+          text: `${isDark ? "Lightmode" : "Darkmode"}`,
+        });
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+        setCursorMode({ type: "default" });
+      }}
       className="rounded-full w-9 h-9 hover:cursor-none"
     >
       <div className="relative h-[1.2rem] w-[1.2rem]">
