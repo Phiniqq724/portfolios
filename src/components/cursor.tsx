@@ -152,14 +152,15 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
             className="border-2 border-primary"
           >
             <Image
+              key={cursorMode.type === "image" ? cursorMode.src : "empty"}
               src={
                 cursorMode.type === "image"
                   ? cursorMode.src
-                  : "/placeholder.png"
+                  : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
               }
-              alt={cursorMode.type === "image" ? (cursorMode.alt ?? "") : ""}
               fill
               className="object-cover"
+              alt={""}
             />
           </div>
         </div>

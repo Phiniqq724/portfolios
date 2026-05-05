@@ -16,7 +16,6 @@ export default function CertList({ data }: { data: any[] }) {
           key={project.id}
           className="space-y-3 cursor-none animate-item"
           onMouseEnter={() => {
-            console.log(project.images);
             setCursorMode({
               type: "image",
               src:
