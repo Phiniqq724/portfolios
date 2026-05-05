@@ -18,7 +18,10 @@ export default function CertList({ data }: { data: any[] }) {
           onMouseEnter={() =>
             setCursorMode({
               type: "image",
-              src: project.images[0]!,
+              src:
+                typeof project.images[0] === "string"
+                  ? project.images[0]
+                  : (project.images[0]?.url ?? project.images[0]?.src),
               alt: "preview",
             })
           }
