@@ -93,7 +93,7 @@ export default function Navbar() {
   return (
     <div className="sticky top-0 z-40 flex justify-center">
       <nav
-        className={`flex sm:justify-between justify-center items-center bg-background/20  backdrop-blur-lg drop-shadow-md drop-shadow-primary/5 transition-all duration-300 ease-out ${
+        className={`flex justify-between items-center bg-background/20  backdrop-blur-lg drop-shadow-md drop-shadow-primary/5 transition-all duration-300 ease-out ${
           scrolled
             ? "xl:w-1/2 w-5/6 translate-y-4 rounded-full shadow-2xl shadow-primary/10 px-10 py-4"
             : "w-full px-12 py-6"
@@ -112,14 +112,14 @@ export default function Navbar() {
           SANDY.
         </Link>
         <ul
-          className={`hidden font-mono transition-all xl:flex  duration-300 ${
+          className={`font-mono transition-all flex  duration-300 ${
             scrolled ? "gap-6" : "gap-8"
           }`}
         >
           {navLinks.map(({ label, href, section }) => {
             const isActive = activeSection === section;
             return (
-              <li key={section} className="flex items-center">
+              <li key={section} className="xl:flex hidden items-center">
                 <Link
                   href={href}
                   className={`nav-link font-medium relative cursor-none transition-all duration-300 group ${

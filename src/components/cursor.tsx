@@ -8,58 +8,22 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
   const mousePosition = useRef({ x: 0, y: 0 });
   const dotPosition = useRef({ x: 0, y: 0 });
-  const borderDotPosition = useRef({ x: 0, y: 0 });
   const animationIdRef = useRef<number | null>(null);
   const [cursorMode, setCursorMode] = useState<CursorMode>({ type: "default" });
-
-  // Track previous image for crossfade
-  const prevImageRef = useRef<{ src: string; alt?: string } | null>(null);
-  const [crossfadeState, setCrossfadeState] = useState<{
-    prev: { src: string; alt?: string } | null;
-    fading: boolean;
-  }>({ prev: null, fading: false });
-  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const [renderPos, setRenderPos] = useState({
-    dot: { x: 0, y: 0 },
-    border: { x: 0, y: 0 },
-  });
   const [isHovering, setIsHovering] = useState(false);
 
-  const DOT_SMOOTHNESS = 0.2;
-  const BORDER_DOT_SMOOTHNESS = 0.1;
+  // refs untuk direct DOM manipulation — no re-render
+  const arrowWrapperRef = useRef<HTMLDivElement>(null);
+  const imageTagRef = useRef<HTMLDivElement>(null);
+  const nameTagRef = useRef<HTMLDivElement>(null);
+
+  const CURSOR_NAME = "User";
+  const DOT_SMOOTHNESS = 0.15;
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
   }, []);
-
-  // Handle image crossfade when cursorMode changes to a new image
-  useEffect(() => {
-    if (cursorMode.type === "image") {
-      const incoming = { src: cursorMode.src, alt: cursorMode.alt };
-
-      if (prevImageRef.current && prevImageRef.current.src !== incoming.src) {
-        if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-
-        setCrossfadeState({ prev: prevImageRef.current, fading: true });
-
-        fadeTimerRef.current = setTimeout(() => {
-          setCrossfadeState({ prev: null, fading: false });
-        }, 350);
-      }
-
-      prevImageRef.current = incoming;
-    } else {
-      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-      setCrossfadeState({ prev: null, fading: false });
-      prevImageRef.current = null;
-    }
-
-    return () => {
-      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-    };
-  }, [cursorMode]);
 
   useEffect(() => {
     if (!isClient) return;
@@ -92,24 +56,12 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
         mousePosition.current.y,
         DOT_SMOOTHNESS,
       );
-      borderDotPosition.current.x = lerp(
-        borderDotPosition.current.x,
-        mousePosition.current.x,
-        BORDER_DOT_SMOOTHNESS,
-      );
-      borderDotPosition.current.y = lerp(
-        borderDotPosition.current.y,
-        mousePosition.current.y,
-        BORDER_DOT_SMOOTHNESS,
-      );
 
-      setRenderPos({
-        dot: { x: dotPosition.current.x, y: dotPosition.current.y },
-        border: {
-          x: borderDotPosition.current.x,
-          y: borderDotPosition.current.y,
-        },
-      });
+      // gerakin langsung lewat ref, zero re-render
+      if (arrowWrapperRef.current) {
+        arrowWrapperRef.current.style.left = `${dotPosition.current.x}px`;
+        arrowWrapperRef.current.style.top = `${dotPosition.current.y}px`;
+      }
 
       animationIdRef.current = requestAnimationFrame(animate);
     };
@@ -124,80 +76,92 @@ export function CursorWrapper({ children }: { children: React.ReactNode }) {
     };
   }, [isClient]);
 
-  if (!isClient) return null;
+  const isImageMode = cursorMode.type === "image";
 
-  const hasCustomMode = cursorMode.type !== "default";
-  const borderSize = hasCustomMode ? "200px" : isHovering ? "44px" : "28px";
+  if (!isClient) return null;
 
   return (
     <CursorContext.Provider value={{ setCursorMode }}>
-      <div className="pointer-events-none fixed inset-0 z-50 hidden xl:block">
-        {/* Inner dot — hide when custom mode is active */}
-        {!hasCustomMode && (
-          <div
-            className="bg-primary absolute rounded-full"
-            style={{
-              width: "8px",
-              height: "8px",
-              transform: "translate(-50%, -50%)",
-              left: `${renderPos.dot.x}px`,
-              top: `${renderPos.dot.y}px`,
-            }}
-          />
-        )}
+      <style>{`* { cursor: none !important; }`}</style>
 
-        {/* Border cursor */}
+      <div className="pointer-events-none fixed inset-0 z-50 hidden lg:block">
         <div
-          className={`border-primary absolute border overflow-hidden flex items-center justify-center rounded-full ${isHovering || hasCustomMode ? "bg-primary/20" : ""}`}
-          style={{
-            width: borderSize,
-            height: borderSize,
-            transform: "translate(-50%, -50%)",
-            left: `${renderPos.border.x}px`,
-            top: `${renderPos.border.y}px`,
-            transition: "width 0.3s, height 0.3s, background-color 0.3s",
-            backdropFilter: isHovering || hasCustomMode ? "blur(8px)" : "none",
-          }}
+          ref={arrowWrapperRef}
+          style={{ position: "absolute", left: 0, top: 0 }}
         >
-          {cursorMode.type === "image" && (
-            <>
-              {/* Outgoing image — fades out */}
-              {crossfadeState.prev && crossfadeState.fading && (
-                <Image
-                  key={`prev-${crossfadeState.prev.src}`}
-                  src={crossfadeState.prev.src}
-                  alt={crossfadeState.prev.alt ?? ""}
-                  fill
-                  className="object-cover absolute inset-0"
-                  style={{
-                    opacity: 0,
-                    transition: "opacity 0.35s ease",
-                  }}
-                />
-              )}
+          {/* SVG Arrow */}
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ display: "block" }}
+          >
+            <path
+              d="M4 2L16 10.5L10.5 11.5L8 17L4 2Z"
+              fill="white"
+              stroke="black"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+          </svg>
 
-              {/* Incoming image — fades in */}
+          {/* Name tag */}
+          <div
+            ref={nameTagRef}
+            style={{
+              position: "absolute",
+              top: "12px",
+              left: "14px",
+              fontSize: "11px",
+              fontWeight: 500,
+              padding: "2px 7px",
+              borderRadius: "0px 6px 6px 6px",
+              whiteSpace: "nowrap",
+              lineHeight: "1.6",
+              transformOrigin: "top left",
+              transform: isImageMode ? "scale(0.8)" : "scale(1)",
+              opacity: isImageMode ? 0 : 1,
+              transition:
+                "opacity 0.25s ease, transform 0.25s ease, background-color 0.3s, color 0.3s",
+            }}
+            className={`font-mono ${isHovering || isImageMode ? "bg-secondary text-primary" : "bg-primary text-secondary"}`}
+          >
+            {CURSOR_NAME}
+          </div>
+
+          {/* Image tag */}
+          <div
+            ref={imageTagRef}
+            style={{
+              position: "absolute",
+              top: "12px",
+              left: "14px",
+              width: "300px",
+              height: "260px",
+              overflow: "hidden",
+              borderRadius: "24px",
+              transformOrigin: "top left",
+              transform: isImageMode ? "scale(1)" : "scale(0)",
+              opacity: isImageMode ? 1 : 0,
+              transition:
+                "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease",
+            }}
+            className="border-4 border-primary"
+          >
+            {cursorMode.type === "image" && (
               <Image
-                key={`curr-${cursorMode.src}`}
                 src={cursorMode.src}
                 alt={cursorMode.alt ?? ""}
                 fill
-                className="object-cover absolute inset-0"
-                style={{
-                  opacity: 1,
-                  transition: "opacity 0.35s ease",
-                }}
+                className="object-cover"
               />
-            </>
-          )}
-
-          {cursorMode.type === "label" && (
-            <span className="text-primary text-[10px] font-medium text-center px-1 leading-tight">
-              {cursorMode.text}
-            </span>
-          )}
+            )}
+          </div>
         </div>
       </div>
+
       {children}
     </CursorContext.Provider>
   );

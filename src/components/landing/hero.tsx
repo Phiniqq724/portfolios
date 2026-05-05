@@ -45,7 +45,7 @@ export default function HeroSection() {
             </p>
             <h1 className="xl:text-[128px] lg:text-[96px] md:text-[80px] text-[64px] font-display animate-item font-black leading-none ">
               FAHRELL <br />
-              <span className="text-primary/50 animate-item">
+              <span className="text-primary/50 dark:text-primary/75 animate-item">
                 SANDY ZHARIIF
               </span>{" "}
             </h1>

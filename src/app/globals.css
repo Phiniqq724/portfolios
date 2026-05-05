@@ -155,10 +155,9 @@ html::-webkit-scrollbar {
   html {
     @apply font-sans;
   }
-}
-
-Link {
-  cursor: none;
+  a {
+    @apply cursor-none;
+  }
 }
 
 @theme {
