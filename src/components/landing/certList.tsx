@@ -16,13 +16,11 @@ export default function CertList({ data }: { data: any[] }) {
           key={project.id}
           className="space-y-3 cursor-none animate-item"
           onMouseEnter={() => {
+            console.log(project.images[0]);
             setCursorMode({
               type: "image",
-              src:
-                typeof project.images[0] === "string"
-                  ? project.images[0]
-                  : (project.images[0]?.url ?? project.images[0]?.src),
-              alt: "preview",
+              src: project.images[0],
+              alt: project.role,
             });
           }}
           onMouseLeave={() => setCursorMode({ type: "default" })}

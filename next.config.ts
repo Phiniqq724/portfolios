@@ -9,8 +9,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: ["assessments-captured-profits-judge.trycloudflare.com"],
-  reactCompiler: false,
+  reactCompiler: true,
 };
 
 export default nextConfig;
