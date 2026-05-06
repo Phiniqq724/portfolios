@@ -31,9 +31,10 @@ export const metadata: Metadata = {
     template: "%s | Fahrell Sandy",
   },
   description:
-    "Portfolio and archive of Fahrell Sandy, showcasing projects, skills, and experience.",
+    "Portfolio and archive of Fahrell Sandy Zhariif Widiatmoko, showcasing projects, skills, and experience.",
   keywords: [
     "Fahrell Sandy",
+    "Fahrell Sandy Zhariif Widiatmoko",
     "Portfolio",
     "Software Engineer",
     "Frontend Developer",
@@ -50,11 +51,11 @@ export const metadata: Metadata = {
     url: "https://www.mustpikek.dev",
     title: "Fahrell Sandy | Portfolio",
     description:
-      "Portfolio and archive of Fahrell Sandy, showcasing projects, skills, and experience.",
+      "Portfolio and archive of Fahrell Sandy Zhariif Widiatmoko, showcasing projects, skills, and experience.",
     siteName: "Fahrell Sandy Portfolio",
     images: [
       {
-        url: "/favicon.ico", // TODO: Add an og-image.png to your public folder
+        url: "/icon.png",
         width: 1200,
         height: 630,
         alt: "Fahrell Sandy Portfolio",
@@ -65,8 +66,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fahrell Sandy | Portfolio",
     description:
-      "Portfolio and archive of Fahrell Sandy, showcasing projects, skills, and experience.",
-    images: ["/og-image.png"], // TODO: Add an og-image.png to your public folder
+      "Portfolio and archive of Fahrell Sandy Zhariif Widiatmoko, showcasing projects, skills, and experience.",
+    images: ["/icon.png"],
   },
   robots: {
     index: true,
