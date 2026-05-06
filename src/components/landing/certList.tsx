@@ -14,7 +14,7 @@ export default function CertList({ data }: { data: any[] }) {
           href={project.link}
           target="_blank"
           key={project.id}
-          className="space-y-3 cursor-none animate-item"
+          className="space-y-3 cursor-none animate-items"
           onMouseEnter={() => {
             console.log(project.images[0]);
             setCursorMode({
@@ -25,7 +25,7 @@ export default function CertList({ data }: { data: any[] }) {
           }}
           onMouseLeave={() => setCursorMode({ type: "default" })}
         >
-          <div className="px-4 py-2 flex items-center justify-between">
+          <div className="px-4 py-2 flex items-center gap-2 justify-between">
             <div className="space-y-1">
               <h1 className="text-xl font-mono font-medium uppercase">
                 {project.role}

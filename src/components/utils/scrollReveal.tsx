@@ -28,7 +28,31 @@ export default function ScrollReveal({
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".animate-item", {
+      const items = gsap.utils.toArray<HTMLElement>(".animate-item");
+
+      items.forEach((item) => {
+        const wrapper = document.createElement("div");
+        wrapper.style.overflow = "hidden";
+        wrapper.style.display = getComputedStyle(item).display;
+        item.parentNode!.insertBefore(wrapper, item);
+        wrapper.appendChild(item);
+      });
+
+      gsap.set(items, { y: "100%" });
+
+      gsap.to(items, {
+        y: 0,
+        duration: duration,
+        stagger: stagger,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 60%",
+          toggleActions: "play none none none",
+        },
+      });
+
+      gsap.from(".animate-items", {
         y: yOffset,
         opacity: 0,
         duration: duration,

@@ -28,7 +28,7 @@ export default async function ProjectSection() {
         <div className=" space-y-16">
           <ProjectList projects={projects} />
         </div>
-        <div className="w-full flex justify-center animate-item">
+        <div className="w-full flex justify-center animate-items">
           <ButtonRandom />
         </div>
       </section>

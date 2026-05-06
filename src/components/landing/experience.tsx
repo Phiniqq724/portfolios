@@ -44,21 +44,27 @@ export default function ExperienceSection() {
         className="md:px-48 md:py-32 px-6 py-16 space-y-24"
       >
         <h1
-          className="font-sans text-5xl md:text-center text-start animate-item"
+          className="font-sans text-5xl md:text-center text-start animate-item hidden md:block"
           style={{ letterSpacing: -3.6 }}
         >
           CHRONOLOGY
+        </h1>
+        <h1
+          className="font-sans text-5xl md:text-center text-start animate-item md:hidden"
+          style={{ letterSpacing: -3.6 }}
+        >
+          STORIES
         </h1>
         <div className="flex gap-10">
           <div className="relative animate-progress-height flex justify-center xl:translate-x-1 translate-x-1.25 ">
             <div className="min-h-full w-0.5 bg-secondary rounded-full" />
           </div>
 
-          <div className="space-y-20 w-full">
+          <div className="space-y-20 w-full animate-item-wrapper">
             {experiences.map((exp, i) => (
               <div
                 key={i}
-                className="relative space-y-2 animate-item group animate-on-center"
+                className="relative space-y-2 animate-items group animate-on-center"
               >
                 <div className="absolute -left-[2.65rem] top-1 w-3 h-3 translate-y-1.5 rounded-full bg-bg-primary border-2 group-hover:border-primary group-[.is-active]:border-primary transition-colors duration-300 border-primary/30" />
                 <Link

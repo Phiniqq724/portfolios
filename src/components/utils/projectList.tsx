@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Project } from "@/utils/supabase";
 import { usePathname } from "next/navigation";
 import { Sort } from "iconsax-reactjs";
 import { useLoading } from "./loadingWrapper";
 import { useCursor } from "../cursorContext";
-const filters = ["ALL", "PROJECT", "WEB", "MOBILE"];
-const ITEMS_PER_PAGE = 3;
+const filters = ["ALL", "WEB", "MOBILE", "COMPETITION"];
+import { useBreakpointItems } from "@/utils/useBreakpointItem";
 
 const categoryMap: Record<string, string> = {
   PROJECT: "PROJECT",
@@ -33,14 +33,21 @@ const categoryMap: Record<string, string> = {
   DJANGO: "BACKEND",
   FASTAPI: "BACKEND",
   GOLANG: "BACKEND",
+  COMPETITION: "COMPETITION",
 };
 
 export default function ProjectList({ projects }: { projects: Project[] }) {
   const pathname = usePathname();
   const [active, setActive] = useState("ALL");
+  const ITEMS_PER_PAGE = useBreakpointItems(3, 4);
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const { startTransition } = useLoading();
   const { setCursorMode } = useCursor();
+
+  useEffect(() => {
+    setDisplayCount(ITEMS_PER_PAGE);
+  }, [ITEMS_PER_PAGE]);
+
   const getCategories = (techStack: string[]): string[] => {
     const categories = new Set<string>();
     for (const tech of techStack) {
@@ -106,7 +113,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
         ) : (
           <div className="space-y-4 animate-item">
             <h1 className="font-sans text-5xl" style={{ letterSpacing: -3.6 }}>
-              SELECTED ARCHIVES
+              SELECTED ARCHIVE
             </h1>
             <p className="text-secondary-foreground font-sans">
               Functional aesthetic in development
@@ -138,7 +145,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
       </div>
 
       <div
-        className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-12 xl:gap-x-36 lg:gap-x-12 md:gap-x-36 justify-between w-full`}
+        className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 justify-between w-full items-stretch`}
       >
         {displayed.map((project) => (
           <Link
@@ -152,9 +159,9 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
               setCursorMode({ type: "label", text: `Open up ${project.name}` })
             }
             onMouseLeave={() => setCursorMode({ type: "default" })}
-            className="space-y-6 md:max-w-90 max-w-full cursor-none animate-item"
+            className="space-y-6 w-full max-w-full h-full cursor-none animate-items"
           >
-            <div className="space-y-6 md:max-w-90 max-w-full group">
+            <div className="space-y-6 max-w-full group h-full flex flex-col">
               <div className="relative overflow-hidden h-112.5">
                 <Image
                   src={project.images?.[0] ?? "/project.jpg"}
@@ -170,34 +177,33 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                   </h1>
                 </div>
               </div>
-
-              <div className="flex justify-between items-start gap-6">
-                <div>
-                  <div className="space-y-1">
-                    <h1 className="text-xl font-sans transition-all duration-300 group-hover:font-medium font-normal group-hover:text-secondary-foreground">
+              <div className="flex-1 flex flex-col  justify-between">
+                <div className="space-y-1">
+                  <div className="w-full flex justify-between gap-6">
+                    <h1 className="text-xl font-sans transition-all duration-300 group-hover:font-medium font-normal group-hover:text-secondary-foreground w-full">
                       {project.name}
                     </h1>
-                    <p className="text-sm font-mono text-[#71717A]">
-                      {project.description.split(" ").slice(0, 10).join(" ")}...
-                    </p>
+                    <Image
+                      src={"/redirect.svg"}
+                      alt="Redirect"
+                      width={12}
+                      height={12}
+                    />
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {project.tech_stack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-0.5 border border-primary/20 text-[#71717A] bg-background font-mono text-xs"
-                      >
-                        {tech.toUpperCase()}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-sm font-mono text-[#71717A]">
+                    {project.description.split(" ").slice(0, 10).join(" ")}...
+                  </p>
                 </div>
-                <Image
-                  src={"/redirect.svg"}
-                  alt="Redirect"
-                  width={12}
-                  height={12}
-                />
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {project.tech_stack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-2 py-0.5 border border-primary/20 text-[#71717A] bg-background font-mono text-xs"
+                    >
+                      {tech.toUpperCase()}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </Link>

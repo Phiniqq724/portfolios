@@ -25,7 +25,7 @@ export default async function CertSection() {
           className="font-sans text-5xl md:text-center text-start animate-item"
           style={{ letterSpacing: -3.6 }}
         >
-          CERTIFICATIONS
+          CERTIFICATE
         </h1>
         <CertList data={data} />
       </section>

@@ -4,6 +4,7 @@ import ExperienceSection from "@/components/landing/experience";
 import HeroSection from "@/components/landing/hero";
 import ProjectSection from "@/components/landing/project";
 import CertSection from "@/components/landing/cert";
+import ArchiveSection from "@/components/landing/archives";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <p className="text-lg text-secondary">ARCHIVES.</p>
         <div className="w-1/4 h-0.5 bg-secondary " />
       </div>
+      {/* <ArchiveSection /> */}
       <ProjectSection />
       <div className="px-6 flex items-center gap-2">
         <div className="w-1/4 h-0.5 bg-secondary " />
