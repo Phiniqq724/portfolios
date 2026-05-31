@@ -196,13 +196,26 @@ const ProjectDashboard = () => {
 
   return (
     <div className="  w-full text-black p-8  font-mono">
-      <div className="-mx-[calc((100vw-100%)/2)] px-64 ">
+      <div className="-mx-[calc((100vw-100%)/2)] px-64 mt-64 ">
         {/* Header */}
-        <div className="mb-12 border-b border-primary/10 pb-8">
-          <h1 className="text-4xl font-bold mb-2 tracking-tighter">
-            PROJECT CONTROL
-          </h1>
-          <p className="text-primary/60 text-sm">Manage your project archive</p>
+        <div className="flex justify-between items-start mb-12 border-b border-primary/10 pb-6">
+          <div className="">
+            <h1 className="text-4xl font-bold mb-2 tracking-tighter">
+              PROJECT CONTROL
+            </h1>
+            <p className="text-primary/60 text-sm">
+              Manage your project archive
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              supabase.auth.signOut();
+              router.push("/");
+            }}
+            className="px-4 py-2 border border-primary/30 text-primary hover:bg-primary hover:text-white transition-all duration-200 text-sm tracking-widest"
+          >
+            SIGN OUT
+          </button>
         </div>
 
         {/* Error State */}
@@ -317,6 +330,7 @@ const ProjectDashboard = () => {
                   </label>
                   <input
                     type="file"
+                    placeholder="Upload project images"
                     accept="image/*"
                     multiple
                     onChange={handleImageUpload}

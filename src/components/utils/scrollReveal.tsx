@@ -98,11 +98,83 @@ export default function ScrollReveal({
       });
     }, containerRef);
 
-    return () => ctx.revert();
+    const resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => {
+      ctx.revert();
+      resizeObserver.disconnect();
+    };
   }, [duration, stagger, yOffset]);
 
   return (
     <div ref={containerRef} className={className}>
+      {children}
+    </div>
+  );
+}
+
+export function RevealItem({
+  children,
+  className = "",
+  delay = 0,
+  yOffset = 50,
+  duration = 1,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  yOffset?: number;
+  duration?: number;
+}) {
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const item = elementRef.current;
+    if (!item) return;
+
+    // Create wrapper to mask the slide-up animation
+    const wrapper = document.createElement("div");
+    wrapper.style.overflow = "hidden";
+    wrapper.style.display = "block";
+    wrapper.style.width = "100%";
+    wrapper.style.height = "100%";
+
+    item.parentNode!.insertBefore(wrapper, item);
+    wrapper.appendChild(item);
+
+    gsap.set(item, { y: yOffset });
+
+    const anim = gsap.to(item, {
+      y: 0,
+      duration: duration,
+      delay: delay,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    return () => {
+      anim.kill();
+      if (wrapper.parentNode) {
+        wrapper.parentNode.insertBefore(item, wrapper);
+        wrapper.remove();
+      }
+    };
+  }, [delay, yOffset, duration]);
+
+  return (
+    <div ref={elementRef} className={className}>
       {children}
     </div>
   );

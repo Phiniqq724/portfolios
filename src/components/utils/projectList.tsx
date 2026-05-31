@@ -9,6 +9,7 @@ import { useLoading } from "./loadingWrapper";
 import { useCursor } from "../cursorContext";
 const filters = ["ALL", "WEB", "MOBILE", "COMPETITION"];
 import { useBreakpointItems } from "@/utils/useBreakpointItem";
+import { RevealItem } from "./scrollReveal";
 
 const categoryMap: Record<string, string> = {
   PROJECT: "PROJECT",
@@ -147,66 +148,67 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
       <div
         className={`grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 justify-between w-full items-stretch`}
       >
-        {displayed.map((project) => (
-          <Link
-            href={`/projects/${project.id}`}
-            key={project.name}
-            onClick={(e) => {
-              e.preventDefault();
-              startTransition(`/projects/${project.id}`);
-            }}
-            onMouseEnter={() =>
-              setCursorMode({ type: "label", text: `Open up ${project.name}` })
-            }
-            onMouseLeave={() => setCursorMode({ type: "default" })}
-            className="space-y-6 w-full max-w-full h-full cursor-none animate-items"
-          >
-            <div className="space-y-6 max-w-full group h-full flex flex-col">
-              <div className="relative overflow-hidden h-112.5">
-                <Image
-                  src={project.images?.[0] ?? "/project.jpg"}
-                  alt={project.name}
-                  width={750}
-                  height={750}
-                  loading="eager"
-                  className="object-cover w-full h-full transition-all duration-300 group-hover:blur-sm group-hover:scale-105"
-                />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <h1 className="px-4 py-2  text-primary/60 font-mono text-xs tracking-widest border-2 border-primary/40 dark:text-secondary/40 dark:border-secondary/40">
-                    VIEW PROJECT
-                  </h1>
-                </div>
-              </div>
-              <div className="flex-1 flex flex-col  justify-between">
-                <div className="space-y-1">
-                  <div className="w-full flex justify-between gap-6">
-                    <h1 className="text-xl font-sans transition-all duration-300 group-hover:font-medium font-normal group-hover:text-secondary-foreground w-full">
-                      {project.name}
+        {displayed.map((project, i) => (
+          <RevealItem key={project.name} delay={(i % 3) * 0.1}>
+            <Link
+              href={`/projects/${project.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                startTransition(`/projects/${project.id}`);
+              }}
+              onMouseEnter={() =>
+                setCursorMode({ type: "label", text: `Open up ${project.name}` })
+              }
+              onMouseLeave={() => setCursorMode({ type: "default" })}
+              className="space-y-6 w-full max-w-full h-full cursor-none"
+            >
+              <div className="space-y-6 max-w-full group h-full flex flex-col">
+                <div className="relative overflow-hidden h-112.5">
+                  <Image
+                    src={project.images?.[0] ?? "/project.jpg"}
+                    alt={project.name}
+                    width={750}
+                    height={750}
+                    loading="eager"
+                    className="object-cover w-full h-full transition-all duration-300 group-hover:blur-sm group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <h1 className="px-4 py-2  text-primary/60 font-mono text-xs tracking-widest border-2 border-primary/40 dark:text-secondary/40 dark:border-secondary/40">
+                      VIEW PROJECT
                     </h1>
-                    <Image
-                      src={"/redirect.svg"}
-                      alt="Redirect"
-                      width={12}
-                      height={12}
-                    />
                   </div>
-                  <p className="text-sm font-mono text-[#71717A]">
-                    {project.description.split(" ").slice(0, 10).join(" ")}...
-                  </p>
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {project.tech_stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-2 py-0.5 border border-primary/20 text-[#71717A] bg-background font-mono text-xs"
-                    >
-                      {tech.toUpperCase()}
-                    </span>
-                  ))}
+                <div className="flex-1 flex flex-col  justify-between">
+                  <div className="space-y-1">
+                    <div className="w-full flex justify-between gap-6">
+                      <h1 className="text-xl font-sans transition-all duration-300 group-hover:font-medium font-normal group-hover:text-secondary-foreground w-full">
+                        {project.name}
+                      </h1>
+                      <Image
+                        src={"/redirect.svg"}
+                        alt="Redirect"
+                        width={12}
+                        height={12}
+                      />
+                    </div>
+                    <p className="text-sm font-mono text-[#71717A]">
+                      {project.description.split(" ").slice(0, 10).join(" ")}...
+                    </p>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {project.tech_stack.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2 py-0.5 border border-primary/20 text-[#71717A] bg-background font-mono text-xs"
+                      >
+                        {tech.toUpperCase()}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          </RevealItem>
         ))}
       </div>
       {displayed.length === 0 && (
